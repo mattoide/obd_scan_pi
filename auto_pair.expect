@@ -1,0 +1,39 @@
+#!/usr/bin/expect
+
+set timeout 20
+set TARGET_MAC_ADDRESS [lindex $argv 0]
+
+spawn bluetoothctl
+
+expect "#"
+send "agent off\r"
+expect "#"
+send "power off\r"
+expect "#"
+send "power on\r"
+expect "#"
+send "agent on\r"
+expect "#"
+send "default-agent\r"
+expect "#"
+send "pair $TARGET_MAC_ADDRESS\r"
+
+expect {
+    "Request confirmation" {
+        send "yes\r"
+        exp_continue
+    }
+    "Enter PIN code" {
+        send "0000\r"  ;# Sostituisci con il PIN se necessario
+        exp_continue
+    }
+    "Pairing successful" {
+        send "trust $TARGET_MAC_ADDRESS\r"
+        expect "#"
+        send "connect $TARGET_MAC_ADDRESS\r"
+        expect "#"
+    }
+}
+
+send "quit\r"
+expect eof
