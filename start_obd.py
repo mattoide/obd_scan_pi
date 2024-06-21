@@ -6,12 +6,10 @@ import obd
 obd_port = None
 connection = None
 supported_commands = None
-supported_commands_names = []
 watch_values = {}
 
 
 
-# Definizione di una classe per gestire ogni quadrato
 class Square:
     def __init__(self, label):
         self.label = label
@@ -19,15 +17,29 @@ class Square:
         self.min_value = float('inf')  # Inizializza il minimo a un valore molto grande
         self.max_value = float('-inf') # Inizializza il massimo a un valore molto piccolo
 
+    def replace_multiple(self, text, replacements):
+        for old, new in replacements.items():
+            text = text.replace(old, new)
+        return text
+
     def update_value(self, new_value):
-        # print(type(new_value))
-        # print(new_value)
-        # time.sleep(1)
-        self.current_value = new_value
-        if new_value < self.min_value:
-            self.min_value = new_value
-        if new_value > self.max_value:
-            self.max_value = new_value
+
+        replacements = {
+            "revolutions_per_minute": "RPM",
+            "degree_Celsius": "C",
+            "gps": "gr/sec"
+        }
+
+        new_value = self.replace_multiple(str(new_value), replacements)
+
+        val = round(float(str(new_value).split(" ")[0]),2)
+        # print(len(new_value.split(" ")))
+        # self.current_value = new_value
+        self.current_value = str(round(float(str(new_value).split(" ")[0]),2)) + ' ' + str(new_value).split(" ")[1]
+        if val < self.min_value:
+            self.min_value = val
+        if val > self.max_value:
+            self.max_value = val
 
     def get_current_value(self):
         return self.current_value
@@ -91,8 +103,8 @@ def update_watch(response):
     if '[obd.obd]' in str(response.value).split(" ")[0]:
         watch_values[response.command.name] = float(0)
 
-    val = float(str(response.value).split(" ")[0])
-    watch_values[response.command.name] = val
+    # val = float(str(response.value).split(" ")[0])
+    watch_values[response.command.name] = response.value
 
 def update_watch_custom(a):
     global watch_values
@@ -109,7 +121,8 @@ def update_watch_custom(a):
         # print(BAROMETRIC_PRESSURE.value.to('bar'))
         # print('turbo_pressure:')
         # print( turbo_pressure)
-        watch_values['BOOST'] = round(float(str(turbo_pressure.to('bar')).split(' ')[0]), 2)
+        watch_values['BOOST'] = turbo_pressure.to('bar')
+
 
 def read_turbo():
     with connection.paused() as was_running:
@@ -122,16 +135,20 @@ def connect(port):
     global obd_port
     global connection
     obd_port = port
-    # connection = obd.OBD()
     connection = obd.Async(port)
+    global supported_commands
+    supported_commands = connection.supported_commands
+    # print(supported_commands)
+    # time.sleep(10)
 
 # Funzione per generare un valore casuale
-def generate_random_value(pid):
+def get_value(pid):
     # return random.randint(1, 100)
     if pid in watch_values:
+
         res = watch_values[pid]
     else:
-        res = float(0)
+        res = str(float(0)) + ' N/A'
 
     return res
 
@@ -181,7 +198,7 @@ def draw_square(stdscr, x, y, width, height, square):
 
 def main(stdscr):
 
-    connect('/dev/pts/11')
+    connect('/dev/pts/2')
     
 
     # Inizializza i colori
@@ -193,7 +210,8 @@ def main(stdscr):
     squares = [
         Square("RPM"),
         Square("Water Temp"),
-        Square("Turbo Pressure"),
+        Square("Turbo Pressure"
+               "(calculated)"),
         Square("Air Temp"),
         Square("Air Flow"),
         Square("Oil Temp")
@@ -233,8 +251,7 @@ def main(stdscr):
             x = horizontal_padding + (i % 3) * (square_width + horizontal_padding)
             y = vertical_padding + (i // 3) * (square_height + vertical_padding)
 
-            new_value = generate_random_value(pids[i])
-            # print(new_value)
+            new_value = get_value(pids[i])
             square.update_value(new_value)
             draw_square(stdscr, x, y, square_width, square_height, square)
 
