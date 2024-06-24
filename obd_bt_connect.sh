@@ -4,7 +4,8 @@
 # sudo apt update && sudo apt upgrade && sudo apt install python3-pip python3.10-venv install bluetooth bluez python-bluez &&
 
 # obd device name
-TARGET_NAME="A53 di Mattia"
+#TARGET_NAME="A53 di Mattia"
+TARGET_NAME="OBDII"
 #
 TARGET_MAC_ADDRESS=""
 

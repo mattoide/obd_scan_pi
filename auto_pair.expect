@@ -41,10 +41,10 @@ expect {
         send "$PIN\r"
     }
 }
-expect "# "
-send "connect $TARGET_MAC_ADDRESS\r"
-expect "# "
-send "trust $TARGET_MAC_ADDRESS\r"
-expect "# "
+#expect "# "
+#send "connect $TARGET_MAC_ADDRESS\r"
+#expect "# "
+#send "trust $TARGET_MAC_ADDRESS\r"
+#expect "# "
 send "quit\r"
 expect eof
