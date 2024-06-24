@@ -198,7 +198,7 @@ def draw_square(stdscr, x, y, width, height, square):
 
 def main(stdscr):
 
-    connect('/dev/pts/2')
+    connect('/dev/rfcomm0')
     
 
     # Inizializza i colori
