@@ -4,8 +4,7 @@
 # sudo apt update && sudo apt upgrade && sudo apt install python3-pip python3.10-venv install bluetooth bluez python-bluez &&
 
 # obd device name
-TARGET_NAME="OBDII"
-
+TARGET_NAME="A53 di Mattia"
 #
 TARGET_MAC_ADDRESS=""
 
@@ -15,7 +14,7 @@ echo "Scanning for Bluetooth devices..."
 bluetoothctl scan on &
 SCAN_PID=$!
 # Aspetta per un periodo di tempo per raccogliere i dispositivi (modificabile)
-sleep 10
+sleep 5
 # Termina la scansione
 kill $SCAN_PID
 # Ottieni la lista dei dispositivi trovati
@@ -43,10 +42,13 @@ fi
 # Se il dispositivo è stato trovato, esegui la connessione
 if [ -n "$TARGET_MAC_ADDRESS" ]; then
 # pairing and connecting to bt
-#bluetoothctl remove $TARGET_MAC_ADDRESS
-#bluetoothctl pair $TARGET_MAC_ADDRESS
-#./auto_pair.expect $TARGET_MAC_ADDRESS
-./bt_connect.sh $TARGET_MAC_ADDRESS
+#bluetoothctl power on && bluetoothctl agent on && bluetoothctl agent NoInputNoOutput && bluetoothctl default-agent && bluetoothctl scan on && bluetoothctl pair $TARGET_MAC_ADDRESS
+
+#echo -e "power on\nagent on\ndefault-agent\nscan on\npair $DEVICE_MAC\n$PIN\nquit" | sudo bluetoothctl
+#echo -e "power on\nagent on\nagent NoInputNoOutput\ndefault-agent\nscan on\npair $TARGET_MAC_ADDRESS\n" | bluetoothctl
+
+./auto_pair.expect $TARGET_MAC_ADDRESS
+#./bt_connect.sh $TARGET_MAC_ADDRESS
 fi
 
 # 68:4A:E9:D8:12:5C
