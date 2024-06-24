@@ -4,7 +4,6 @@
 set timeout -1
 
 set PIN 1234
-#set PIN yes
 
 set TARGET_MAC_ADDRESS [lindex $argv 0]
 

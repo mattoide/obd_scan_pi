@@ -8,8 +8,8 @@
 TARGET_NAME="OBDII"
 #
 TARGET_MAC_ADDRESS=""
-
 #
+
 echo "Scanning for Bluetooth devices..."
 # Inizializza il comando bluetoothctl per cercare i dispositivi
 bluetoothctl scan on &
@@ -42,14 +42,8 @@ fi
 
 # Se il dispositivo è stato trovato, esegui la connessione
 if [ -n "$TARGET_MAC_ADDRESS" ]; then
-# pairing and connecting to bt
-#bluetoothctl power on && bluetoothctl agent on && bluetoothctl agent NoInputNoOutput && bluetoothctl default-agent && bluetoothctl scan on && bluetoothctl pair $TARGET_MAC_ADDRESS
-
-#echo -e "power on\nagent on\ndefault-agent\nscan on\npair $DEVICE_MAC\n$PIN\nquit" | sudo bluetoothctl
-#echo -e "power on\nagent on\nagent NoInputNoOutput\ndefault-agent\nscan on\npair $TARGET_MAC_ADDRESS\n" | bluetoothctl
-
+# pairing to bt
 ./auto_pair.expect $TARGET_MAC_ADDRESS
-#./bt_connect.sh $TARGET_MAC_ADDRESS
 fi
 
 # 68:4A:E9:D8:12:5C
