@@ -1,0 +1,11 @@
+#/etc/bluetooth/main.conf
+
+[General]
+PairingTimeout = 0
+AutoEnable=true
+
+[Agent]
+DefaultAgent=true
+
+[Pairing]
+Key=1234
