@@ -44,6 +44,9 @@ expect {
 #send "connect $TARGET_MAC_ADDRESS\r"
 #expect "# "
 #send "trust $TARGET_MAC_ADDRESS\r"
+
 #expect "# "
 send "quit\r"
+send "rfcomm release 0 "
+send "rfcomm bind 0 $TARGET_MAC_ADDRESS"
 expect eof
